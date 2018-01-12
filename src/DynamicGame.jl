@@ -5,6 +5,8 @@ using BasisMatrices
 using QuantEcon
 using Distributions
 
+export vmax, collocation, collocation_method, residual
+
 # update value function and policy function given the basis coefficient
 function vmax(model::DataType, x::Array{Float64, 2} ,colnodes::Array{Float64, 2}, b, coef::Array{Float64, 2}, epss::Array{Float64, 2}, weights::Array{Float64, 1}, tol=0.000000001, maxit=10000)
     xnew = x
