@@ -80,7 +80,7 @@ end
 
 # Bellman_residual calculation
 # true_x, c is provided by the above collocation method function
-function residual(model**DataType, newn::Int64, smin::Int64, smax::Int64, true_x::Array{Float64, 2}, basis, c::Array{Float64, 2}, e::Array{Float64,2}, w::Array{Float64,1})
+function residual(model::DataType, newn::Int64, smin::Int64, smax::Int64, true_x::Array{Float64, 2}, basis, c::Array{Float64, 2}, e::Array{Float64,2}, w::Array{Float64,1})
     gri = linspace(smin, smax, nn)
     new_grid = gridmake(gri, gri)
     
