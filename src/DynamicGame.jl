@@ -35,11 +35,11 @@ function vmax(model,
         order2 = [0 0]
         order2[1, p] = 2
         for it in 1:maxit
-            util, util_der1, util_der2 = model.u(model, colnodes, xnew, p), model.ux(model, colnodes, xnew, p), model.uxx(model, colnodes, xnew, p)
+            util, util_der1, util_der2 = u(model, colnodes, xnew, p), ux(model, colnodes, xnew, p), uxx(model, colnodes, xnew, p)
             Ev, Evx, Evxx = 0.0, 0.0, 0.0
             for k in 1:size(epss)[1]
                 eps, weight= epss[k, :], weights[k]
-                transition, transition_der1, transition_der2 = model.s(model, xnew, eps), model.sx(model, xnew, eps, p), model.sxx(model, xnew, eps, p)
+                transition, transition_der1, transition_der2 = s(model, xnew, eps), sx(model, xnew, eps, p), sxx(model, xnew, eps, p)
                 vn = funeval(coef[:, p], b, transition)
                 vnder1 =  funeval(coef[:, p], b, transition, order1)
                 vnder2 = funeval(coef[:, p], b, transition, order2)
