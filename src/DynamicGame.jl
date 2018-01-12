@@ -9,7 +9,22 @@ export
 vmax, coll, collocation_method, residual
 
 # update value function and policy function given the basis coefficient
-function vmax(model, x::Array{Float64, 2} ,colnodes::Array{Float64, 2}, b, coef::Array{Float64, 2}, epss::Array{Float64, 2}, weights::Array{Float64, 1}, tol=0.000000001, maxit=10000)
+function vmax(model, 
+    x::Array{Float64, 2},　
+    colnodes::Array{Float64, 2},　
+    b, 
+    coef::Array{Float64, 2}, 
+    epss::Array{Float64, 2}, 
+    weights::Array{Float64, 1}, 
+    u,
+    ux,
+    uxx,
+    s,
+    sx,
+    sxx,
+    tol=0.000000001, 
+    maxit=10000)
+    
     xnew = x
     v = zeros((size(colnodes)[1], 2))
     vnew = v
@@ -58,7 +73,22 @@ function coll(smax::Int64, smin::Int64, n::Int64)
 end
 
 # collocationmethod main loop
-function collocation_method(model, x_initial::Array{Float64, 2}, c_initial::Array{Float64, 2}, S::Array{Float64,2}, basis, Φ, e::Array{Float64,2}, w::Array{Float64,1}, maxit = 1000, tol = 0.000000001)
+function collocation_method(model, 
+    x_initial::Array{Float64, 2}, 
+    c_initial::Array{Float64, 2}, 
+    S::Array{Float64,2}, 
+    basis, 
+    Φ, 
+    e::Array{Float64,2}, 
+    w::Array{Float64,1}, 
+    u,
+    ux,
+    uxx,
+    s,
+    sx,
+    sxx,
+    maxit = 1000, 
+    tol = 0.000000001)
     
     c = c_initial
     x = x_initial
@@ -66,7 +96,7 @@ function collocation_method(model, x_initial::Array{Float64, 2}, c_initial::Arra
     count = 0
     for it in 1:maxit
         cold = c
-        vnew, x = vmax(model, x, S, basis, c, e, w)
+        vnew, x = vmax(model, x, S, basis, c, e, w, u, ux, uxx, s, sx, sxx)
         c = Φ.vals[1] \ vnew
         v = vnew
         c_error = cold - c
@@ -81,14 +111,29 @@ end
 
 # Bellman_residual calculation
 # true_x, c is provided by the above collocation method function
-function residual(model, newn::Int64, smin::Int64, smax::Int64, true_x::Array{Float64, 2}, basis, c::Array{Float64, 2}, e::Array{Float64,2}, w::Array{Float64,1})
+function residual(model, 
+    newn::Int64, 
+    smin::Int64, 
+    smax::Int64, 
+    true_x::Array{Float64, 2}, 
+    basis, 
+    c::Array{Float64, 2}, 
+    e::Array{Float64,2}, 
+    w::Array{Float64,1},
+    u,
+    ux,
+    uxx,
+    s,
+    sx,
+    sxx)
+    
     gri = linspace(smin, smax, nn)
     new_grid = gridmake(gri, gri)
     
     c_x =Φ.vals[1] \ true_x
     newx = funeval(c_x, basis, new_grid)
     
-    v_true = vmax(model, newx[:,:, 1], new_grid, basis, c, e, w)[1][:, 1];
+    v_true = vmax(model, newx[:,:, 1], new_grid, basis, c, e, w, u, ux, uxx, s, sx, sxx)[1][:, 1];
     predict_value = funeval(c, basis, new_grid)[:, 1];
     
     resid = reshape(v_true - predict_value, nn, nn)
