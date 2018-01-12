@@ -9,7 +9,7 @@ export
 vmax, coll, collocation_method, residual
 
 # update value function and policy function given the basis coefficient
-function vmax(model::DataType, x::Array{Float64, 2} ,colnodes::Array{Float64, 2}, b, coef::Array{Float64, 2}, epss::Array{Float64, 2}, weights::Array{Float64, 1}, tol=0.000000001, maxit=10000)
+function vmax(model, x::Array{Float64, 2} ,colnodes::Array{Float64, 2}, b, coef::Array{Float64, 2}, epss::Array{Float64, 2}, weights::Array{Float64, 1}, tol=0.000000001, maxit=10000)
     xnew = x
     v = zeros((size(colnodes)[1], 2))
     vnew = v
@@ -58,7 +58,7 @@ function coll(smax::Int64, smin::Int64, n::Int64)
 end
 
 # collocationmethod main loop
-function collocation_method(model::DataType, x_initial::Array{Float64, 2}, c_initial::Array{Float64, 2}, S::Array{Float64,2}, basis, Φ, e::Array{Float64,2}, w::Array{Float64,1}, maxit = 1000, tol = 0.000000001)
+function collocation_method(model, x_initial::Array{Float64, 2}, c_initial::Array{Float64, 2}, S::Array{Float64,2}, basis, Φ, e::Array{Float64,2}, w::Array{Float64,1}, maxit = 1000, tol = 0.000000001)
     
     c = c_initial
     x = x_initial
@@ -81,7 +81,7 @@ end
 
 # Bellman_residual calculation
 # true_x, c is provided by the above collocation method function
-function residual(model::DataType, newn::Int64, smin::Int64, smax::Int64, true_x::Array{Float64, 2}, basis, c::Array{Float64, 2}, e::Array{Float64,2}, w::Array{Float64,1})
+function residual(model, newn::Int64, smin::Int64, smax::Int64, true_x::Array{Float64, 2}, basis, c::Array{Float64, 2}, e::Array{Float64,2}, w::Array{Float64,1})
     gri = linspace(smin, smax, nn)
     new_grid = gridmake(gri, gri)
     
