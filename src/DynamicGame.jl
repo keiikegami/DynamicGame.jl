@@ -5,7 +5,8 @@ using BasisMatrices
 using QuantEcon
 using Distributions
 
-export vmax, collocation, collocation_method, residual
+export
+vmax, coll, collocation_method, residual
 
 # update value function and policy function given the basis coefficient
 function vmax(model::DataType, x::Array{Float64, 2} ,colnodes::Array{Float64, 2}, b, coef::Array{Float64, 2}, epss::Array{Float64, 2}, weights::Array{Float64, 1}, tol=0.000000001, maxit=10000)
@@ -45,16 +46,14 @@ function vmax(model::DataType, x::Array{Float64, 2} ,colnodes::Array{Float64, 2}
 end
 
 # generate elements for collocation method
-function collocations(smax::Int64, smin::Int64, n::Int64)
+function coll(smax::Int64, smin::Int64, n::Int64)
     # smax is the maximum of the state variable
     # smin is the minimum of the state variable
     # n is the number of grid for one dimension
-    
     sgrid0 = linspace(smin, smax, n)
     basis = Basis(SplineParams(sgrid0, 0, 3), SplineParams(sgrid0, 0, 3))
     S, (coordx, coordy) = nodes(basis)
     Φ = BasisMatrix(basis, Expanded(), S, 0)
-    
     return basis, S, Φ, coordx, coordy
 end
 
